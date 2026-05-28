@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="{% static 'css/login.css' %}" rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div class="logo"></div>
+    <div class="login-block">
+       <form action="" method="post" class="form-group">
+          {% csrf_token %}
+        <h1>Book update</h1>
+        <label>booK_id:</label>
+        <input type="text" value="{{items.Book_id}}" placeholder="first_name" id="name"  name="book_id"required>
+        <label>booK_name:</label>
+        <input type="text" value="{{items.Book_name}}" placeholder="last_name" id="last_name" name="Book_name" required>
+        <label>auther_name:</label>
+        <input type="text" value="{{items.Author_name}}" placeholder="user name" id="user_name" name="author_name"required>
+       
+        <label>quantity:</label>
+        <input type="number" value="{{items.Quantity}}" placeholder="password" id="passs" name= "Book_quantity"required>
+    
+    
+        <button type="submit">update</button> <br><br>
+       
+        <a class="btn btn-primary " href="/adm">BACK</a>
+       </form>
+    </div>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
+    <script src="{% static 'js/plugin.js' %}"></script>
+
+    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+    
+</body>
+</html>
+
