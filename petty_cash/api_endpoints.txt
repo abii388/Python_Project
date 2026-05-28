@@ -1,0 +1,413 @@
+# Petty Cash Management API Endpoints
+
+## Authentication
+- POST /api/accounts/register/ - Register a new user
+  Example JSON:
+  {
+    "email": "user@example.com",
+    "password": "Password123!",
+    "password_confirmation": "Password123!",
+    "role": "Cashier",
+    "first_name": "John",
+    "last_name": "Doe"
+  }
+- POST /api/accounts/login/ - Login (obtain JWT token)
+  Example JSON:
+  {
+    "email": "user@example.com",
+    "password": "Password123!"
+  }
+- POST /api/accounts/refresh/ - Refresh JWT token
+  Example JSON:
+  {
+    "refresh": "<refresh_token>"
+  }
+- POST /api/accounts/logout/ - Logout
+  Example JSON:
+  {
+    "refresh": "<refresh_token>"
+  }
+- POST /api/accounts/reset-password/ - Reset password
+  Example JSON:
+  {
+    "email": "user@example.com"
+  }
+- GET /api/accounts/profile/ - Get user profile
+- PUT /api/accounts/profile/ - Update user profile
+  Example JSON:
+  {
+    "first_name": "John",
+    "last_name": "Doe"
+  }
+
+## Funds
+- GET /api/funds/ - List all funds
+- POST /api/funds/ - Create a new fund
+  Example JSON:
+  {
+    "name": "Office Supplies",
+    "budget": 5000.00,
+    "currency": "USD"
+  }
+- GET /api/funds/{id}/ - Retrieve a fund
+- PUT /api/funds/{id}/ - Update a fund
+  Example JSON:
+  {
+    "name": "Office Supplies",
+    "budget": 6000.00,
+    "currency": "USD"
+  }
+- DELETE /api/funds/{id}/ - Delete a fund
+
+
+## Transactions
+
+========================================
+TRANSACTION API DOCUMENTATION
+========================================
+
+
+----------------------------------------
+1. GET ALL TRANSACTIONS
+----------------------------------------
+
+ENDPOINT:
+GET /api/transactions/
+
+ACCESS:
+- Admin       -> All transactions
+- Auditor     -> All transactions
+- Approver    -> All transactions
+- Cashier     -> Only own transactions
+
+
+----------------------------------------
+2. CREATE TRANSACTION
+----------------------------------------
+
+ENDPOINT:
+POST /api/transactions/
+
+ACCESS:
+- Cashier -> Allowed
+- Others  -> Not Allowed
+
+
+JSON BODY (Expense):
+{
+    "fund": 1,
+    "amount": "1500.00",
+    "transaction_type": "Expense",
+    "description": "Office chair repair"
+}
+
+
+JSON BODY (Replenishment):
+{
+    "fund": 1,
+    "amount": "5000.00",
+    "transaction_type": "Replenishment",
+    "description": "Monthly fund replenishment"
+}
+
+
+OPTIONAL:
+{
+    "receipt": "file"
+}
+
+
+AUTO GENERATED:
+- requester
+- status = Pending
+- created_at
+- updated_at
+
+
+----------------------------------------
+3. GET SINGLE TRANSACTION
+----------------------------------------
+
+ENDPOINT:
+GET /api/transactions/{id}/
+
+EXAMPLE:
+GET /api/transactions/1/
+
+
+----------------------------------------
+4. UPDATE TRANSACTION
+----------------------------------------
+
+ENDPOINT:
+PUT /api/transactions/{id}/
+
+OR
+
+PATCH /api/transactions/{id}/
+
+
+ACCESS:
+- Admin       -> Allowed
+- Cashier     -> Own pending transactions only
+- Approver    -> Not Allowed
+- Auditor     -> Not Allowed
+
+
+PUT BODY:
+{
+    "fund": 1,
+    "amount": "3000.00",
+    "transaction_type": "Expense",
+    "description": "Updated office repair"
+}
+
+
+PATCH BODY:
+{
+    "amount": "3500.00"
+}
+
+
+RULES:
+- Approved transactions cannot be edited
+- Rejected transactions cannot be edited
+
+
+----------------------------------------
+5. DELETE TRANSACTION
+----------------------------------------
+
+ENDPOINT:
+DELETE /api/transactions/{id}/
+
+
+ACCESS:
+- Admin -> Allowed
+- Others -> Not Allowed
+
+
+RESPONSE:
+204 NO CONTENT
+
+
+----------------------------------------
+6. APPROVE TRANSACTION
+----------------------------------------
+
+ENDPOINT:
+POST /api/transactions/{id}/approve/
+
+
+EXAMPLE:
+POST /api/transactions/1/approve/
+
+
+ACCESS:
+- Admin
+- Approver
+
+
+JSON BODY:
+{
+    "comments": "Approved for office expense"
+}
+
+
+SUCCESS RESPONSE:
+{
+    "detail": "Transaction approved successfully."
+}
+
+
+RULES:
+- Only pending transactions can be approved
+- Expense must not exceed fund balance
+- Fund balance updates automatically
+
+
+BALANCE LOGIC:
+
+Expense:
+Fund Balance = Fund Balance - Amount
+
+Replenishment:
+Fund Balance = Fund Balance + Amount
+
+
+----------------------------------------
+7. REJECT TRANSACTION
+----------------------------------------
+
+ENDPOINT:
+POST /api/transactions/{id}/reject/
+
+
+EXAMPLE:
+POST /api/transactions/1/reject/
+
+
+ACCESS:
+- Admin
+- Approver
+
+
+JSON BODY:
+{
+    "comments": "Receipt is missing"
+}
+
+
+SUCCESS RESPONSE:
+{
+    "detail": "Transaction rejected successfully."
+}
+
+
+RULES:
+- Rejection comments are mandatory
+- Only pending transactions can be rejected
+
+
+----------------------------------------
+8. PENDING REQUESTS
+----------------------------------------
+
+ENDPOINT:
+GET /api/transactions/pending_requests/
+
+
+ACCESS:
+- Admin
+- Approver
+
+
+RESPONSE:
+[
+    {
+        "id": 1,
+        "fund": 2,
+        "amount": "2500.00",
+        "status": "Pending",
+        "description": "Printer ink purchase"
+    }
+]
+
+
+----------------------------------------
+9. FILTERING
+----------------------------------------
+
+FILTER BY FUND:
+GET /api/transactions/?fund=1
+
+
+FILTER BY STATUS:
+GET /api/transactions/?status=Pending
+
+
+STATUS VALUES:
+- Pending
+- Approved
+- Rejected
+
+
+FILTER BY TYPE:
+GET /api/transactions/?transaction_type=Expense
+
+
+TYPE VALUES:
+- Expense
+- Replenishment
+
+
+----------------------------------------
+10. SEARCH
+----------------------------------------
+
+SEARCH DESCRIPTION:
+GET /api/transactions/?search=printer
+
+
+----------------------------------------
+11. ORDERING
+----------------------------------------
+
+NEWEST FIRST:
+GET /api/transactions/?ordering=-created_at
+
+
+OLDEST FIRST:
+GET /api/transactions/?ordering=created_at
+
+
+HIGHEST AMOUNT:
+GET /api/transactions/?ordering=-amount
+
+
+LOWEST AMOUNT:
+GET /api/transactions/?ordering=amount
+
+
+----------------------------------------
+12. BUSINESS RULES
+----------------------------------------
+
+1. Only Cashier can create transactions
+
+2. Only Admin/Approver can approve or reject
+
+3. Only Admin can delete transactions
+
+4. Approved transactions cannot be edited
+
+5. Rejected transactions cannot be edited
+
+6. Rejection comments are required
+
+7. Expense amount cannot exceed fund balance
+
+8. Approval updates:
+   - transaction status
+   - fund balance
+   - approval workflow
+   - approval step
+
+9. All APIs require authentication
+
+
+
+
+## Audit
+- GET /api/audit/ - List audit logs
+- POST /api/audit/ - Create audit log (probably auto)
+  Example JSON:
+  {
+    "action": "transaction_created",
+    "user": 2,
+    "target_object": "Transaction",
+    "target_id": 5,
+    "details": "Transaction created for printer toner"
+  }
+- GET /api/audit/{id}/ - Retrieve audit log
+- PUT /api/audit/{id}/ - Update audit log
+  Example JSON:
+  {
+    "details": "Updated transaction details"
+  }
+- DELETE /api/audit/{id}/ - Delete audit log
+
+## Reports
+- GET /api/reports/transactions_excel/ - Download transactions report as Excel
+
+## Documentation
+- GET /api/schema/ - OpenAPI schema
+- GET /api/docs/ - Swagger UI documentation
+
+## Admin
+- /admin/ - Django admin interface
+
+## Notes
+- All endpoints except login require JWT authentication
+- Role-based permissions apply (Admin, Auditor, Approver, Requester)
+- WebSocket support via Channels for real-time notifications

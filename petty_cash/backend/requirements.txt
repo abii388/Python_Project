@@ -1,0 +1,15 @@
+Django==4.2.11
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+django-filter
+psycopg2-binary
+python-decouple
+dj-database-url
+celery
+redis
+openpyxl
+channels
+daphne
+pytest-django
+drf-spectacular
