@@ -1,0 +1,99 @@
+Petty Cash Management Project Summary
+
+1. Project Overview
+- This is a Django backend for a petty cash management system.
+- It exposes REST API endpoints for accounts, funds, transactions, approvals, replenishments, audit logs, and reports.
+- Authentication uses JSON Web Tokens (JWT).
+- The project supports PostgreSQL via DATABASE_URL and Redis for Celery and Channels.
+
+2. Installed Libraries
+- Django==4.2.11: main web framework.
+- djangorestframework: REST API framework.
+- djangorestframework-simplejwt: JWT authentication.
+- django-cors-headers: CORS support for frontend access.
+- django-filter: filtering support for API querysets.
+- psycopg2-binary: PostgreSQL database adapter.
+- python-decouple: environment variable management (.env support).
+- celery: background task queue.
+- redis: Redis support for Celery and Channels.
+- openpyxl: Excel file generation.
+- channels: Django Channels for WebSocket support.
+- daphne: ASGI server for Channels.
+- pytest-django: testing support.
+- drf-spectacular: OpenAPI schema and Swagger documentation.
+
+3. Security and Authentication
+- Default REST framework permission is `IsAuthenticated`.
+- JWT authentication is enabled via `rest_framework_simplejwt.authentication.JWTAuthentication`.
+- Tokens are issued by `/api/accounts/login/` and refreshed by `/api/accounts/refresh/`.
+- Public endpoints (no authentication required):
+  - `POST /api/accounts/register/`
+  - `POST /api/accounts/login/`
+  - `POST /api/accounts/reset-password/`
+- All other API endpoints require a valid `Authorization: Bearer <access_token>` header.
+
+4. User Roles and Access Rules
+- Roles defined in `apps.accounts.models.Role`:
+  - `Admin`
+  - `Cashier`
+  - `Approver`
+  - `Auditor`
+
+- `Admin` can:
+  - Create, update, and delete funds.
+  - See all funds, transactions, replenishments, approval steps, and audit logs.
+  - Access audit log endpoints.
+  - Create Employees 
+
+- `Auditor` can:
+  - See all funds, transactions, replenishments, and approval steps.
+  - Access audit log endpoints.
+  - Cannot create/update/delete funds.
+
+- `Approver` can:
+  - See transactions and replenishment requests for funds they manage.
+  - See approval steps assigned to them.
+  - Create and manage their own transactions and replenishment requests.
+
+- `Cashier` (or regular user) can:
+  - See only their own transactions and replenishment requests.
+  - Create transactions and replenishment requests.
+
+5. URL Access Summary
+- `/api/accounts/register/` - public registration.
+- `/api/accounts/login/` - public login.
+- `/api/accounts/refresh/` - public token refresh.
+- `/api/accounts/logout/` - authenticated users.
+- `/api/accounts/reset-password/` - public password reset request.
+- `/api/accounts/profile/` - authenticated users.
+
+- `/api/funds/` - authenticated users for listing;
+  - create/update/delete restricted to Admin only.
+
+- `/api/transactions/` - authenticated users;
+  - Admin/Auditor see all transactions.
+  - Approver sees fund-managed transactions.
+  - Cashier sees own transactions.
+
+- `/api/approvals/workflows/` - authenticated users; read-only.
+- `/api/approvals/steps/` - authenticated users;
+  - Admin/Auditor see all steps.
+  - Others see only their assigned steps.
+
+- `/api/replenishments/` - authenticated users;
+  - Admin/Auditor see all requests.
+  - Approver sees fund-managed requests.
+  - Cashier sees own requests.
+
+- `/api/audit/` - authenticated Admin and Auditor only.
+- `/api/reports/transactions_excel/` - authenticated users with role-based filtering.
+
+6. Configuration Files
+- `backend/config/settings.py` contains database, JWT, Celery, Channels, and DRF setup.
+- `.env` contains environment values such as `SECRET_KEY`, `DEBUG`, `DATABASE_URL`, and `REDIS_URL`.
+- `backend/requirements.txt` lists installed Python libraries.
+
+7. Notes
+- The project uses Django Channels and Redis for real-time notifications, though exact WebSocket routes are in `apps.notifications`.
+- OpenAPI documentation is available at `/api/schema/` and `/api/docs/`.
+- Admin interface is available at `/admin/`.
