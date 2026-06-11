@@ -1,0 +1,24 @@
+Library Management Django App
+
+Overview:
+This is a Django-based library management application with admin and student workflows.
+The app supports user login/registration, book inventory management, student book requests, and admin approval of book issues.
+
+Main features:
+- Custom user model (`myapp.models.User`) with admission number as primary key.
+- Admin book management via `Admin_add_book` model for book details and stock quantity.
+- Student book request tracking via `Student_book_details` model, including issue date, expiry date, fine, and status.
+- User authentication with login and registration views.
+- Admin views for adding, updating, viewing, and deleting books.
+- Student functionality for requesting books and viewing issued books.
+- Book return handling that updates book quantity and removes returned student records.
+
+Key files:
+- `myapp/models.py` : defines User, Admin_add_book, and Student_book_details.
+- `myapp/views.py` : application logic for authentication, book operations, and order management.
+- `myapp/templates/` : HTML templates for admin and student interfaces.
+
+Use:
+- Run the Django server and access the app via the configured URLs.
+- Admin users can manage book inventory and approve student issue requests.
+- Students can register, login, request books, and view issued books.
