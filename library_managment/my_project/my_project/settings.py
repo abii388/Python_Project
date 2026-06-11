@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "https://python-project-3-ysw3.onrender.com",
+    "python-project-3-ysw3.onrender.com",
 ]
 
 
