@@ -1,0 +1,54 @@
+React Project Requirements
+=========================
+
+1. Node.js
+   - Install Node.js (LTS version recommended)
+   - Required to run npm or yarn
+
+2. Package Manager
+   - npm (comes with Node.js) or Yarn
+
+3. Text Editor or IDE
+   - VS Code is recommended
+
+4. Browser
+   - Google Chrome or any modern browser
+
+5. Basic Web Technologies
+   - HTML
+   - CSS
+   - JavaScript
+
+6. React Dependencies
+   - react
+   - react-dom
+
+7. Common Additional Libraries
+   - redux
+   - react-redux
+   - @reduxjs/toolkit
+   - axios
+   - react-router-dom
+   - bootstrap
+   - tailwindcss
+
+8. Build Tools
+   - Vite or Create React App (optional)
+   - Babel/Webpack support may be included automatically
+
+9. Optional Tools
+   - Git
+   - GitHub
+   - ESLint
+   - React DevTools
+
+10. Basic Folder Structure
+   - src/
+   - public/
+   - package.json
+
+11. Commands commonly used
+    - npm create vite@latest
+    - npm install
+    - npm install redux react-redux @reduxjs/toolkit
+    - npm run dev

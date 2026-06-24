@@ -1,0 +1,62 @@
+Concert Booking Django REST API Project
+
+Overview:
+This project is a Django application built with Django REST Framework for managing concerts, user authentication, ticket booking, and admin management.
+
+Key components:
+- Custom User model (`myapp.models.User`): extends `AbstractUser` with `user_role` and `ph_no`.
+- Concert model (`myapp.models.Concert`): stores concert details including name, date, time, location, available tickets, prize, and status.
+- Booked_concert model (`myapp.models.Booked_concert`): stores booking transactions for users with ticket count, total price, and concert snapshot data.
+- Serializers (`myapp.serializers`): transform models to/from JSON for API operations.
+- Views (`myapp.views`): implement REST endpoints for signup, login, logout, concert management, booking, user management, search, PDF generation, and more.
+
+Authentication:
+- Uses DRF token authentication.
+- The `signup` endpoint creates a new user and returns success details.
+- The `login` endpoint authenticates a user and returns an auth token.
+- Protected endpoints require `IsAuthenticated`.
+- Admin-only endpoints check `request.user.user_role == 'admin'`.
+
+Admin operations:
+- Create and manage concerts.
+- View all concerts ordered by name.
+- Get concert details and update or delete by concert ID.
+- View booked concert details by concert ID.
+- Toggle concert status between `Enable` and `Disable`.
+- View all users and inspect/update/delete a user record.
+
+User operations:
+- Retrieve concert ticket price.
+- Book a concert with ticket validation (maximum 3 tickets per booking).
+- Update concert ticket availability and mark sold out if needed.
+- View booking history.
+- Delete a booking record.
+- Generate a PDF ticket/receipt for a specific booking.
+
+Important behavior notes:
+- Concert search matches exact values for name, location, or date.
+- Ticket booking reduces available ticket count and uses an atomic update.
+- The `available_tickets` field can become the string `sold out` after booking the last ticket.
+- The `pdf_generate` endpoint renders a `concert.html` template and returns a PDF response.
+
+Overall application view:
+- Users register and sign in to receive a token for authenticated API access.
+- Admin users can create and manage concerts, view and manage user accounts, and review booked tickets.
+- Regular users can view concert pricing, submit a booking request, view their booking history, and delete bookings.
+- Bookings are stored separately from concerts in the `Booked_concert` model, while concert snapshots preserve details at booking time.
+- The project separates concerns: models define data, serializers validate/serialize data, views implement endpoint behavior, and URLs route requests.
+
+Files of interest:
+- `myapp/models.py` : data models.
+- `myapp/serializers.py` : request/response serializers.
+- `myapp/views.py` : business logic and API endpoints.
+- `myapp/urls.py` : routes for all API endpoints.
+- `concert/urls.py` : project-level URL configuration.
+
+Usage:
+1. Run migrations: `python manage.py makemigrations` and `python manage.py migrate`.
+2. Create a superuser if needed: `python manage.py createsuperuser`.
+3. Start the server: `python manage.py runserver`.
+4. Use the API endpoints under the root path (for example, `/signup`, `/login`, `/createconcert`, etc.).
+
+This file provides a high-level project explanation and helps developers understand the purpose and flow of the Django app.
