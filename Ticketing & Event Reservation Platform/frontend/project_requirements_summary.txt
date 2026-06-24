@@ -1,0 +1,73 @@
+Full-Stack Project Requirements and API Integration Summary
+=========================================================
+
+1. Project Overview
+- Build a full-stack web application with:
+  - Frontend: React
+  - Backend: Django / Django REST Framework
+  - Database: PostgreSQL or SQLite
+  - API communication: JSON via REST API
+
+2. Frontend Requirements
+- React.js
+- Vite or Create React App
+- React Router DOM
+- Axios for API requests
+- Redux Toolkit (optional, if state management is needed)
+- Bootstrap or Tailwind CSS for styling
+- Node.js and npm installed
+
+3. Backend Requirements
+- Python 3.x
+- Django
+- Django REST Framework
+- Django CORS Headers
+- Database driver (for PostgreSQL: psycopg2-binary)
+- Virtual environment recommended
+
+4. Common Installations
+- Frontend:
+  - npm install react react-dom
+  - npm install axios react-router-dom
+  - npm install redux react-redux @reduxjs/toolkit
+  - npm install bootstrap
+
+- Backend:
+  - pip install django djangorestframework django-cors-headers psycopg2-binary
+
+5. API Integration Requirements
+- Create REST API endpoints in Django
+- Use Axios in React to call backend APIs
+- Handle GET, POST, PUT, DELETE requests
+- Use JSON response format
+- Configure CORS for frontend-backend communication
+
+6. Example API Flow
+- Frontend sends request to backend URL
+- Backend processes request and returns JSON data
+- Frontend displays data in UI
+- Errors are handled using try/catch and status messages
+
+7. Project Summary
+- The frontend will provide the user interface.
+- The backend will manage business logic and database operations.
+- API integration connects both layers efficiently.
+- This structure is suitable for dashboards, e-commerce, booking systems, and management apps.
+
+8. Suggested Folder Structure
+- frontend/   -> React app
+- backend/    -> Django project
+- api/        -> Django REST API app
+- models/     -> Database models
+- templates/  -> Optional HTML templates
+
+9. Basic Commands
+- Frontend:
+  - npm create vite@latest
+  - npm install
+  - npm run dev
+
+- Backend:
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - python manage.py runserver
