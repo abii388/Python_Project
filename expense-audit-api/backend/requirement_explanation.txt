@@ -1,0 +1,28 @@
+Django==4.2.11: Core web framework for the backend project.
+
+djangorestframework: Django REST Framework used for building the API views, serializers, and response handling.
+
+djangorestframework-simplejwt: JWT authentication backend used in REST Framework settings for token-based auth.
+
+django-cors-headers: Middleware to allow cross-origin requests from the frontend.
+
+django-filter: Provides filtering support for DRF querysets via `DjangoFilterBackend`.
+
+psycopg2-binary: PostgreSQL adapter used by `dj_database_url` when the database is PostgreSQL.
+
+python-decouple: Loads configuration values like SECRET_KEY and DATABASE_URL from environment variables or `.env`.
+
+dj-database-url: Parses `DATABASE_URL` into Django `DATABASES` settings.
+
+celery: Asynchronous task queue used by `config/celery.py` in the backend project.
+
+openpyxl: Used in `apps/reports/views.py` to generate Excel (`.xlsx`) report files.
+
+channels: Provides Django Channels support for async websockets and real-time consumers via `config/asgi.py` and `apps/notifications/consumers.py`.
+
+drf-spectacular: Generates API schema and documentation endpoints via `config/urls.py`.
+
+Removed dependencies (not used in current backend code):
+redis: Redis is not currently required because Redis broker/channel settings are commented out and the project uses in-memory channel layers.
+daphne: Not referenced anywhere in the backend code; not needed for local project code execution.
+pytest-django: No pytest-based tests or pytest test configuration found in this backend project.
